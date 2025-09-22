@@ -9,13 +9,13 @@ const { yearMonthValidator } = require('../validators/yearMonth');
  * Provides endpoints for retrieving team performance metrics by year and month.
  * 
  * Endpoints:
- *   - /all    → Users and groups with average & total revenue.
+ *   - /usersAndGroups    → Users and groups with average & total revenue.
  *   - /users  → Per-user revenue metrics.
  *   - /groups → Per-group revenue metrics.
  * 
  */
 
-router.get('/all', yearMonthValidator, async (req, res) => {
+router.get('/usersAndGroups', yearMonthValidator, async (req, res) => {
     try {
         const year = req.query.year;
         const month = req.query.month;
