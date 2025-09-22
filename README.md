@@ -43,12 +43,12 @@ If you have any questions, feel free to reach out to your interview scheduler fo
 
 ## Solution
 
-Added 5 new endpoints for the front-end team to utilize.
-Endpoints are: users, groups, user, group, users and groups.
-Each endpoint validates its inputs and retrieves performance metric data for a given year and month.
-All data computation and formatting is performed by Postgres (no JavaScript post-processing).
-The implementation guards against SQL injection via parameterized queries.
-Comprehensive error handling.
-Unit tests to test validation functions.
-Organized, high abstraction, layered solution that should be easy to understand.
-Strictly adheres to customer (read: front-end team) specifications.
+1. Added 5 new endpoints for the front-end team to utilize.
+2. Endpoints are: users, groups, user, group, users and groups.
+3. Each endpoint validates its inputs and retrieves performance metric data for a given year and month.
+4. All data computation and formatting is performed by Postgres (no JavaScript post-processing).
+5. The implementation guards against SQL injection via parameterized queries.
+6. Comprehensive error handling.
+7. Unit tests to test validation functions.
+8. Organized, high abstraction, layered solution that should be easy to understand.
+9. Strictly adheres to customer (read: front-end team) specifications.
