@@ -2,16 +2,14 @@
 
 const { pgclient } = require('./client');
 
-const FILTERED_DATE = `
+const TIME_WINDOW = `
   WITH bounds AS (SELECT make_date($1, $2, 1) AS start_date, (make_date($1, $2, 1) + INTERVAL '1 month')::date AS end_date),
   filtered_sales AS (SELECT s.* FROM public.sales s JOIN bounds b ON s.date >= b.start_date AND s.date < b.end_date)
 `;
 
-const ORDERING = `ORDER BY total_revenue DESC `;
-
-async function getUsers(year, month) {
+async function getUsersData(year, month) {
   const sql = `
-    ${FILTERED_DATE},
+    ${TIME_WINDOW},
     user_sales AS (
       SELECT
         fs.user_id,
@@ -43,7 +41,7 @@ async function getUsers(year, month) {
     FROM user_sales us
     JOIN public.users u ON u.id = us.user_id
     LEFT JOIN user_groups_agg uga ON uga.user_id = us.user_id
-    ${ORDERING}
+    ORDER BY u.id ASC
   `;
 
   const params = [year, month];
@@ -53,9 +51,9 @@ async function getUsers(year, month) {
   return rows;
 }
 
-async function getGroups(year, month) {
+async function getGroupsData(year, month) {
   const sql = `
-    ${FILTERED_DATE}
+    ${TIME_WINDOW}
     SELECT
       g.id   AS group_id,
       g.name AS group_name,
@@ -72,7 +70,7 @@ async function getGroups(year, month) {
     JOIN public.groups g       ON g.id = ug.group_id
     JOIN public.users u        ON u.id = fs.user_id
     GROUP BY g.id, g.name
-    ${ORDERING}
+    ORDER BY g.id ASC
   `;
 
   const params = [year, month];
@@ -82,11 +80,27 @@ async function getGroups(year, month) {
   return rows;
 }
 
-const get = async function(year, month) {
-  const users = await getUsers(year, month);
-  const groups = await getGroups(year, month);
+const getUsersAndGroups = async function(year, month) {
+  const usersData = await getUsersData(year, month);
+  const groupsData = await getGroupsData(year, month);
 
-  return { users, groups };
+  return { usersData, groupsData };
 };
 
-module.exports = { get };
+const getUsers = async function(year, month) {
+  const usersData = await getUsersData(year, month);
+
+  return { usersData };
+};
+
+const getGroups = async function(year, month) {
+  const groupsData = await getGroupsData(year, month);
+
+  return { groupsData };
+};
+
+module.exports = { 
+  getUsersAndGroups,
+  getUsers,
+  getGroups
+};
