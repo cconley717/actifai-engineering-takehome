@@ -2,10 +2,10 @@
 
 const { pgclient } = require('./client');
 const fs = require("fs");
-const groupsSqlInsert = fs.readFileSync("seedGroups.sql").toString();
-const userGroupsSqlInsert = fs.readFileSync("seedUserGroups.sql").toString();
-const usersSqlInsert = fs.readFileSync("seedUsers.sql").toString();
-const salesSqlInsert = fs.readFileSync("seedSales.sql").toString();
+const groupsSqlInsert = fs.readFileSync("./database/sql/seedGroups.sql").toString();
+const userGroupsSqlInsert = fs.readFileSync("./database/sql/seedUserGroups.sql").toString();
+const usersSqlInsert = fs.readFileSync("./database/sql/seedUsers.sql").toString();
+const salesSqlInsert = fs.readFileSync("./database/sql/seedSales.sql").toString();
 
 // Table creation queries
 const createUsersTableQuery = `
