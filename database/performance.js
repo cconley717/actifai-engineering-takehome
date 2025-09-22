@@ -51,6 +51,52 @@ async function getUsersData(year, month) {
   return rows;
 }
 
+async function getUserData(year, month, id) {
+  const sql = `
+    ${TIME_WINDOW},
+    user_sales AS (
+      SELECT
+        fs.user_id,
+        AVG(fs.amount)::numeric(12,2) AS avg_revenue,
+        SUM(fs.amount)::numeric(12,2) AS total_revenue,
+        COUNT(*)                      AS num_sales
+      FROM filtered_sales fs
+      WHERE fs.user_id = $3
+      GROUP BY fs.user_id
+    ),
+    user_groups_agg AS (
+      SELECT
+        ug.user_id,
+        COALESCE(
+          json_agg(DISTINCT jsonb_build_object('id', g.id, 'name', g.name))
+          FILTER (WHERE g.id IS NOT NULL),
+          '[]'::json
+        ) AS groups
+      FROM public.user_groups ug
+      JOIN public.groups g ON g.id = ug.group_id
+      WHERE ug.user_id = $3
+      GROUP BY ug.user_id
+    )
+    SELECT
+      u.id   AS user_id,
+      u.name AS user_name,
+      COALESCE(us.avg_revenue,  0)::numeric(12,2) AS avg_revenue,
+      COALESCE(us.total_revenue,0)::numeric(12,2) AS total_revenue,
+      COALESCE(us.num_sales,    0)                AS num_sales,
+      COALESCE(uga.groups, '[]'::json)            AS groups
+    FROM public.users u
+    LEFT JOIN user_sales      us  ON us.user_id = u.id
+    LEFT JOIN user_groups_agg uga ON uga.user_id = u.id
+    WHERE u.id = $3
+  `;
+
+  const params = [year, month, id];
+
+  const { rows } = await pgclient.query(sql, params);
+
+  return rows;
+}
+
 async function getGroupsData(year, month) {
   const sql = `
     ${TIME_WINDOW}
@@ -80,27 +126,70 @@ async function getGroupsData(year, month) {
   return rows;
 }
 
-const getUsersAndGroups = async function(year, month) {
-  const usersData = await getUsersData(year, month);
-  const groupsData = await getGroupsData(year, month);
+async function getGroupData(year, month, id) {
+  const sql = `
+    ${TIME_WINDOW}
+    SELECT
+      g.id   AS group_id,
+      g.name AS group_name,
+      AVG(fs.amount)::numeric(12,2) AS avg_revenue,
+      SUM(fs.amount)::numeric(12,2) AS total_revenue,
+      COUNT(*)                      AS num_sales,
+      COALESCE(
+        json_agg(DISTINCT jsonb_build_object('id', u.id, 'name', u.name))
+        FILTER (WHERE u.id IS NOT NULL),
+        '[]'::json
+      ) AS users
+    FROM filtered_sales fs
+    JOIN public.user_groups ug ON ug.user_id = fs.user_id
+    JOIN public.groups g       ON g.id = ug.group_id
+    JOIN public.users u        ON u.id = fs.user_id
+    WHERE g.id = $3
+    GROUP BY g.id, g.name
+  `;
 
-  return { usersData, groupsData };
-};
+  const params = [year, month, id];
+
+  const { rows } = await pgclient.query(sql, params);
+
+  return rows;
+}
 
 const getUsers = async function(year, month) {
   const usersData = await getUsersData(year, month);
 
-  return { usersData };
+  return { isError: false, usersData };
+};
+
+const getUser = async function(year, month, id) {
+  const usersData = await getUserData(year, month, id);
+
+  return { isError: false, usersData };
 };
 
 const getGroups = async function(year, month) {
   const groupsData = await getGroupsData(year, month);
 
-  return { groupsData };
+  return { isError: false, groupsData };
+};
+
+const getGroup = async function(year, month, id) {
+  const groupsData = await getGroupData(year, month, id);
+
+  return { isError: false, groupsData };
+};
+
+const getUsersAndGroups = async function(year, month) {
+  const usersData = await getUsersData(year, month);
+  const groupsData = await getGroupsData(year, month);
+
+  return { isError: false, usersData, groupsData };
 };
 
 module.exports = { 
-  getUsersAndGroups,
   getUsers,
-  getGroups
+  getUser,
+  getGroups,
+  getGroup,
+  getUsersAndGroups
 };
