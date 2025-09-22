@@ -50,5 +50,5 @@ If you have any questions, feel free to reach out to your interview scheduler fo
 5. The implementation guards against SQL injection via parameterized queries.
 6. Comprehensive error handling.
 7. Unit tests to test validation functions.
-8. Organized, high abstraction, layered solution that should be easy to understand.
+8. Organized, high abstraction, layered solution for low cognitive load.
 9. Strictly adheres to customer (read: front-end team) specifications.
