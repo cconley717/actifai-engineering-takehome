@@ -1,40 +1,8 @@
 'use strict';
 
-const express = require('express');
-const seeder = require('./database/seeder');
-const performanceRoutes = require('./routes/performance');
+const app = require('./app');
 
-// Constants
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
-async function start() {
-  // Seed the database
-  await seeder.seedDatabase();
-
-  // App
-  const app = express();
-
-  // Health check
-  app.get('/health', (req, res) => {
-    res.send('Hello World');
-  });
-
-  app.use('/performance', performanceRoutes);
-
-  app.use((req, res) => {
-    res.status(404).json({ isError: true, message: 'Not Found' });
-  });
-
-  app.use((err, req, res, next) => {
-    console.log(err);
-    
-    res.status(500).json({ isError: true, message: 'Internal Server Error' });
-  });
-
-  app.listen(PORT, HOST);
-  
-  console.log(`Server is running on http://${HOST}:${PORT}`);
-}
-
-start();
+app.listen(PORT, HOST);

@@ -5,10 +5,16 @@
   "author": "Actifai Engineering",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "express": "4.16.1",
     "pg": "8.7.1"
+  },
+  "devDependencies": {
+    "jest": "^30.1.3"
   }
 }

@@ -37,7 +37,18 @@ define your endpoints.
 4. You now have a database and server running on your machine. You can test it by navigating to `http://localhost:3000/health` in
 your browser. You should see a "Hello World" message.
 
-
 ## Help
 
 If you have any questions, feel free to reach out to your interview scheduler for clarification!
+
+## Solution
+
+Added 5 new endpoints for the front-end team to utilize.
+Endpoints are: users, groups, user, group, users and groups.
+Each endpoint validates its inputs and retrieves performance metric data for a given year and month.
+All data computation and formatting is performed by Postgres (no JavaScript post-processing).
+The implementation guards against SQL injection via parameterized queries.
+Comprehensive error handling.
+Unit tests to test validation functions.
+Organized, high abstraction, layered solution that should be easy to understand.
+Strictly adheres to customer (read: front-end team) specifications.
