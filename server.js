@@ -23,13 +23,13 @@ async function start() {
   app.use('/performance', performanceRoutes);
 
   app.use((req, res) => {
-    res.status(404).send('Not Found');
+    res.status(404).json({ isError: true, message: 'Not Found' });
   });
 
   app.use((err, req, res, next) => {
     console.log(err);
-
-    res.status(500).send('Internal Server Error');
+    
+    res.status(500).json({ isError: true, message: 'Internal Server Error' });
   });
 
   app.listen(PORT, HOST);
