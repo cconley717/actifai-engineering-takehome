@@ -57,3 +57,11 @@ If you have any questions, feel free to reach out to your interview scheduler fo
 7. Unit tests to test validation functions.
 8. Organized, high abstraction, layered solution for low cognitive load.
 9. Strictly adheres to customer (read: front-end team) specifications.
+
+### Example Usage
+
+http://localhost:3000/performance/users?year=2021&month=7
+http://localhost:3000/performance/groups?year=2021&month=7
+http://localhost:3000/performance/users/1?year=2021&month=7
+http://localhost:3000/performance/groups/1?year=2021&month=7
+http://localhost:3000/performance/usersandgroups?year=2021&month=7
