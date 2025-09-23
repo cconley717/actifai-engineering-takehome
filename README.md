@@ -44,12 +44,12 @@ If you have any questions, feel free to reach out to your interview scheduler fo
 ## Solution
 
 1. Added 5 new endpoints for the front-end team to utilize.
-2. Endpoints are: users, groups, user, group, users and groups.
-    1. users: retrieve performance metric data for all users given a year and month.
-    2. groups: retrieve performance metric data for all groups given a year and month.
-    3. user: retrieve performance metric data for a user given a year, month, and user id.
-    4. group: retrieve performance metric data for a group given a year, month, and group id.
-    5. users and groups: retrieve performance metric data for all users and groups given a year and month.
+2. Endpoints are: users, groups, users/:userId, groups/:groupId, usersAndGroups.
+    1. **users?year=int&month=int**: retrieve performance metric data for all users given a year and month.
+    2. **groups?year=int&month=int**: retrieve performance metric data for all groups given a year and month.
+    3. **users/:userId?year=int&month=int**: retrieve performance metric data for a user given a year, month, and user id.
+    4. **groups/:groupId?year=int&month=int**: retrieve performance metric data for a group given a year, month, and group id.
+    5. **usersAndGroups?year=int&month=int**: retrieve performance metric data for all users and groups given a year and month.
 3. Each endpoint validates its inputs and retrieves performance metric data for a given year and month.
 4. All data computation and formatting is performed by Postgres (no JavaScript post-processing).
 5. The implementation guards against SQL injection via parameterized queries.
