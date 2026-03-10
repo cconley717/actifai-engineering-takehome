@@ -65,3 +65,6 @@ If you have any questions, feel free to reach out to your interview scheduler fo
 3. http://localhost:3000/performance/users/1?year=2021&month=7
 4. http://localhost:3000/performance/groups/1?year=2021&month=7
 5. http://localhost:3000/performance/usersandgroups?year=2021&month=7
+
+### No Offer
+Bunch of time wasters.
